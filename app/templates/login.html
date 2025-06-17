@@ -1,12 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
-<div class="flex justify-center">
-    <div class="w-full max-w-xs">
-        <h1 class="text-3xl font-bold text-center mb-4">Login</h1>
-        <a href="{{ url_for('login_google') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full text-center">
-            Login with Google
+<div class="flex justify-center items-center min-h-[calc(100vh-250px)]">
+    <div class="w-full max-w-sm p-8 space-y-6 bg-white rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-900">Login to your Account</h1>
+        <a href="{{ url_for('login_google') }}" class="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="w-5 h-5 mr-3" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 109.8 512 0 402.2 0 261.8S109.8 11.8 244 11.8c70.3 0 129.8 27.8 174.2 71.9l-67.6 64.8C314.5 152.1 282.7 136 244 136c-80.6 0-146.5 65.9-146.5 146.8S163.4 429.6 244 429.6c87.9 0 122.3-64.8 126.9-97.4H244v-83.3h244c2.5 13.9 4.3 29.2 4.3 45.9z"></path></svg>
+            <span>Continue with Google</span>
         </a>
+        <p class="text-sm text-center text-gray-600 pt-4">
+            Don't have an account?
+            <a href="{{ url_for('signup') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                Sign up
+            </a>
+        </p>
     </div>
 </div>
 {% endblock %}

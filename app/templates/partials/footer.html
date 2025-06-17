@@ -1,13 +1,13 @@
-<footer class="bg-gray-800 text-white mt-auto text-sm">
-    <div class="container mx-auto px-6 py-3">
-        <div class="flex justify-between items-center">
+<footer class="bg-white mt-12">
+    <div class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center text-sm text-gray-500">
             <p>&copy; 2024 My FastAPI App - v{{ APP_VERSION }}</p>
             <div>
-                <a href="{{ url_for('about') }}" class="px-2">About</a>
-                <a href="{{ url_for('contact') }}" class="px-2">Contact</a>
-                <a href="{{ url_for('privacy_policy') }}" class="px-2">Privacy</a>
-                <a href="{{ url_for('cookie_policy') }}" class="px-2">Cookies</a>
-                <a href="{{ url_for('terms_and_conditions') }}" class="px-2">Terms</a>
+                <a href="{{ url_for('about') }}" class="px-3 hover:text-indigo-600">About</a>
+                <a href="{{ url_for('contact') }}" class="px-3 hover:text-indigo-600">Contact</a>
+                <a href="{{ url_for('privacy_policy') }}" class="px-3 hover:text-indigo-600">Privacy</a>
+                <a href="{{ url_for('cookie_policy') }}" class="px-3 hover:text-indigo-600">Cookies</a>
+                <a href="{{ url_for('terms_and_conditions') }}" class="px-3 hover:text-indigo-600">Terms</a>
             </div>
         </div>
     </div>
