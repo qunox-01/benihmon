@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block meta_description %}Welcome to our homepage.{% endblock %}
+{% block content %}
+<div class="text-center">
+    <h1 class="text-4xl font-bold">Welcome to My FastAPI App</h1>
+    {% if user %}
+        <p class="text-xl mt-4">Hello, {{ user.name }}!</p>
+    {% else %}
+        <p class="text-xl mt-4">Please log in to continue.</p>
+    {% endif %}
+</div>
+{% endblock %}
