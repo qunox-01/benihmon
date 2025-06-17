@@ -11,6 +11,8 @@ from .sso import get_google_sso_router, get_current_user
 
 load_dotenv()
 
+APP_VERSION = os.getenv("APP_VERSION", "0.0.1")
+
 app = FastAPI()
 
 # Add session middleware
@@ -19,6 +21,7 @@ app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
 # Mount static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
+templates.env.globals['APP_VERSION'] = APP_VERSION
 
 # Include routers
 google_sso_router = get_google_sso_router(os.getenv("GOOGLE_CLIENT_ID"), os.getenv("GOOGLE_CLIENT_SECRET"))
