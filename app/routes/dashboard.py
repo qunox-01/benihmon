@@ -1,15 +1,18 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
-@router.get("/signup", response_class=HTMLResponse)
-async def signup_page(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request})
+async def get_current_user(request: Request):
+    user = request.session.get("user")
+    if user:
+        return user
+    return None
 
-@router.get("/logout")
-async def logout(request: Request):
-    request.session.pop('user', None)
-    return RedirectResponse(url="/")
+@router.get("/dashboard", response_class=HTMLResponse)
+async def dashboard(request: Request, user: dict = Depends(get_current_user)):
+    if not user:
+        return RedirectResponse(url="/login")
+    return templates.TemplateResponse("account.html", {"request": request, "user": user})

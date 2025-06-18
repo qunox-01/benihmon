@@ -4,11 +4,6 @@
             <div class="text-2xl font-bold text-gray-900">
                 <a href="{{ url_for('index') }}" class="hover:text-indigo-600">MyApp</a>
             </div>
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="{{ url_for('index') }}" class="nav-link px-2 text-secondary">Home</a></li>
-                <li><a href="{{ url_for('about') }}" class="nav-link px-2">About</a></li>
-                <li><a href="{{ url_for('contact') }}" class="nav-link px-2">Contact</a></li>
-            </ul>
 
             <div class="text-end">
                 {% if request.session.user %}
@@ -18,7 +13,6 @@
                     <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
                 {% else %}
                     <a href="{{ url_for('login_page') }}" class="btn btn-outline-primary me-2">Login</a>
-                    <a href="{{ url_for('signup_page') }}" class="btn btn-primary">Sign-up</a>
                 {% endif %}
             </div>
         </div>

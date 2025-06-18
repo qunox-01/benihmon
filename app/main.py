@@ -8,7 +8,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 # --- Route and Handler Imports ---
 # The structure is now very clean: feature-based modules for routes.
-from .routes import index, login, signup, dashboard, pages, seo, auth
+from .routes import index, login, dashboard, pages, seo, auth, legal
 from .routes.errors import http_exception_handler
 
 # Load environment variables from .env file
@@ -19,7 +19,7 @@ APP_VERSION = os.getenv("APP_VERSION", "0.0.1")
 
 # Initialize the FastAPI application
 app = FastAPI(
-    title="Serindit",
+    title="Benihmon",
     description="A modern web application boilerplate.",
     version=APP_VERSION
 )
@@ -46,20 +46,16 @@ templates.env.globals['APP_VERSION'] = APP_VERSION
 # --- Router Inclusion ---
 
 # Get the Google SSO router from the new auth module
-google_sso_router = auth.get_google_sso_router(
-    os.getenv("GOOGLE_CLIENT_ID"),
-    os.getenv("GOOGLE_CLIENT_SECRET")
-)
+google_sso_router = auth.get_google_sso_router()
 
 # Include all the modular routers from the 'routes' directory
 app.include_router(index.router, tags=["General"])
 app.include_router(pages.router, tags=["General"])
+app.include_router(legal.router, tags=["General"])
 app.include_router(seo.router, tags=["SEO"])
 app.include_router(login.router, tags=["User"])
-app.include_router(signup.router, tags=["User"])
 app.include_router(dashboard.router, tags=["User"])
 # Include the main auth router (for /logout) and the SSO router (for /auth/google/*)
-app.include_router(auth.router, tags=["Authentication"])
 app.include_router(google_sso_router, prefix="/auth", tags=["Authentication"])
 
 

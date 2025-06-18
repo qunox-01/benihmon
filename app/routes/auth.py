@@ -1,69 +1,72 @@
-import os
-from fastapi import APIRouter, Request, Depends
-from fastapi.responses import RedirectResponse
+# Import necessary libraries and modules
 from authlib.integrations.starlette_client import OAuth
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import RedirectResponse
+from starlette.config import Config
 
-# This router will handle all authentication-related endpoints
-router = APIRouter()
+# Import the dependency to get the current user from the dashboard route
+from app.routes.dashboard import get_current_user
 
-# Initialize OAuth for handling Google SSO
-oauth = OAuth()
+# Load environment variables from a .env file for configuration
+# This is where you'll store your Google Client ID and Secret
+config = Config(".env")
 
-# This function creates and configures the Google SSO router.
-# It's kept separate to allow for easy configuration from main.py.
-def get_google_sso_router(google_client_id: str, google_client_secret: str):
+# Initialize the OAuth client with the loaded configuration
+oauth = OAuth(config)
+
+# Register the Google OAuth provider with the necessary details
+# The server_metadata_url automatically fetches the required endpoints from Google
+# The client_kwargs specifies the permissions (scopes) we are requesting
+oauth.register(
+    name="google",
+    server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+    client_kwargs={"scope": "openid email profile"},
+)
+
+def get_google_sso_router():
     """
-    Configures and returns the Google SSO routes.
+    Creates and returns an APIRouter for Google SSO authentication.
+    This function encapsulates all authentication-related routes.
     """
-    # Register the Google OAuth client
-    oauth.register(
-        name='google',
-        client_id=google_client_id,
-        client_secret=google_client_secret,
-        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-        client_kwargs={
-            'scope': 'openid email profile'
-        }
-    )
-
     sso_router = APIRouter()
 
-    @sso_router.route('/google/login')
+    @sso_router.route("/google/login", name="login_google")
     async def login(request: Request):
         """
         Redirects the user to Google's authentication page.
+        The `redirect_uri` is the URL that Google will send the user back to
+        after they have authenticated. We use `url_for` to generate this URL dynamically.
         """
-        redirect_uri = request.url_for('auth_callback')
+        # The callback route is named 'auth_callback'
+        redirect_uri = request.url_for("auth_callback")
         return await oauth.google.authorize_redirect(request, redirect_uri)
 
-    @sso_router.route('/google/callback')
+    @sso_router.route("/google/callback", name="auth_callback")
     async def auth_callback(request: Request):
         """
         Handles the callback from Google after successful authentication.
-        Sets the user's session data.
+        It authorizes the access token and retrieves the user's information.
+        The user's info is then stored in the session.
         """
+        # Exchange the authorization code for an access token
         token = await oauth.google.authorize_access_token(request)
-        user = token.get('userinfo')
+        # The user's profile information is included in the token
+        user = token.get("userinfo")
         if user:
-            request.session['user'] = dict(user)
-        return RedirectResponse(url='/account')
+            # Store the user's information in the session
+            request.session["user"] = dict(user)
+        # Redirect the user to their dashboard after logging in
+        return RedirectResponse(url="/dashboard")
+
+    @sso_router.get("/logout", name="logout")
+    async def logout(request: Request):
+        """
+        Logs the user out by clearing their session data.
+        After clearing the session, it redirects the user to the homepage.
+        """
+        # Remove the user data from the session
+        request.session.pop("user", None)
+        # Redirect to the homepage
+        return RedirectResponse(url="/")
 
     return sso_router
-
-# Dependency to get the current user from the session
-async def get_current_user(request: Request):
-    """
-    A dependency that retrieves the current user from the session,
-    if they are logged in. Returns None otherwise.
-    """
-    return request.session.get('user')
-
-# Dedicated logout route
-@router.get("/logout")
-async def logout(request: Request):
-    """
-    Clears the user's session and logs them out.
-    """
-    request.session.pop('user', None)
-    return RedirectResponse(url='/')
-
