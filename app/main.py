@@ -8,7 +8,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 # --- Route and Handler Imports ---
 # The structure is now very clean: feature-based modules for routes.
-from .routes import index, login, signup, account, other, seo, auth
+from .routes import index, login, signup, dashboard, pages, seo, auth
 from .routes.errors import http_exception_handler
 
 # Load environment variables from .env file
@@ -53,11 +53,11 @@ google_sso_router = auth.get_google_sso_router(
 
 # Include all the modular routers from the 'routes' directory
 app.include_router(index.router, tags=["General"])
-app.include_router(other.router, tags=["General"])
+app.include_router(pages.router, tags=["General"])
 app.include_router(seo.router, tags=["SEO"])
 app.include_router(login.router, tags=["User"])
 app.include_router(signup.router, tags=["User"])
-app.include_router(account.router, tags=["User"])
+app.include_router(dashboard.router, tags=["User"])
 # Include the main auth router (for /logout) and the SSO router (for /auth/google/*)
 app.include_router(auth.router, tags=["Authentication"])
 app.include_router(google_sso_router, prefix="/auth", tags=["Authentication"])

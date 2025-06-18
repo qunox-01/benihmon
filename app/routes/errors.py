@@ -1,7 +1,7 @@
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from ..sso import get_current_user
+from .auth import get_current_user
 
 
 templates = Jinja2Templates(directory="app/templates")

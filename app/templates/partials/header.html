@@ -4,14 +4,21 @@
             <div class="text-2xl font-bold text-gray-900">
                 <a href="{{ url_for('index') }}" class="hover:text-indigo-600">MyApp</a>
             </div>
-            <div class="flex items-center">
-                {% if user %}
-                    <a href="{{ url_for('account') }}" class="mx-4">
-                        <img src="{{ user.picture }}" alt="{{ user.name }}" class="w-10 h-10 rounded-full border-2 border-transparent hover:border-indigo-500 transition-colors">
-                    </a>
-                    <a href="{{ url_for('logout') }}" class="text-gray-600 hover:text-indigo-600 mx-2 font-medium">Logout</a>
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{{ url_for('index') }}" class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a href="{{ url_for('about') }}" class="nav-link px-2">About</a></li>
+                <li><a href="{{ url_for('contact') }}" class="nav-link px-2">Contact</a></li>
+            </ul>
+
+            <div class="text-end">
+                {% if request.session.user %}
+                    {# Previous line: <a href="{{ url_for('account') }}" class="nav-link">Account</a> #}
+                    {# Corrected line below #}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary me-2">Account</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="text-gray-600 hover:text-indigo-600 mx-2 font-medium">Login</a>
+                    <a href="{{ url_for('login_page') }}" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="{{ url_for('signup_page') }}" class="btn btn-primary">Sign-up</a>
                 {% endif %}
             </div>
         </div>
